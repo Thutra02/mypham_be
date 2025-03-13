@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết đơn hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        h2 {
+            color: #006400;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            color: #006400;
+            margin-top: 30px;
+        }
+        
+        p {
+            margin: 10px 0;
+        }
+        
+        strong {
+            font-weight: bold;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+        }
+        
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #006400;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        a:hover {
+            background-color: #004d00;
+        }
+    </style>
+</head>
+<body>
+    <h2>Chi tiết đơn hàng</h2>
+    <p><strong>Mã đơn hàng:</strong> <span th:text="${order.orderId}"></span></p>
+    <p><strong>Người đặt:</strong> <span th:text="${order.user.username}"></span></p>
+    <p><strong>Email:</strong> <span th:text="${order.user.email}"></span></p>
+    <p><strong>Địa chỉ giao hàng:</strong> <span th:text="${order.shippingAddress.streetAddress + ', ' + order.shippingAddress.city}"></span></p>
+    <p><strong>Phương thức thanh toán:</strong> <span th:text="${order.paymentMethod}"></span></p>
+    <p><strong>Trạng thái:</strong> <span th:text="${order.status}"></span></p>
+    <p><strong>Ngày đặt hàng:</strong> <span th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span></p>
+    <p><strong>Tổng tiền:</strong> <span th:text="${order.finalAmount} + ' VND'"></span></p>
+
+    <h3>Sản phẩm trong đơn hàng</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Sản phẩm</th>
+                <th>Mô tả</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item : ${order.orderItems}">
+                <td>
+                    <img th:src="${item.product.productImages[0].image}" alt="Product Image" width="100">
+                </td>
+                <td th:text="${item.product.name}"></td>
+                <td th:text="${item.product.description}"></td>
+                <td th:text="${item.quantity}"></td>
+                <td th:text="${item.unitPrice} + ' VND'"></td>
+                <td th:text="${item.unitPrice * item.quantity} + ' VND'"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="http://localhost:4000/orders">Quay lại danh sách</a>
+</body>
+</html>
