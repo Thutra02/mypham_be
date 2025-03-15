@@ -71,7 +71,7 @@ public class UserServiceImpl implements IUserService {
             cartRepository.save(cart);
             return savedUser;
         } catch (Exception e) {
-            throw new RuntimeException( e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -99,14 +99,15 @@ public class UserServiceImpl implements IUserService {
             }
             return false;
         } catch (Exception e) {
-            throw new RuntimeException( e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
     @Override
     public User getUserById(Long id) {
         try {
-            return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+            return userRepository.findById(id)
+                    .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         } catch (Exception e) {
             throw new RuntimeException("Failed to get user by id: " + e.getMessage(), e);
         }
@@ -157,7 +158,7 @@ public class UserServiceImpl implements IUserService {
     public boolean changePassword(String email, String oldPassword, String newPassword) {
         try {
             User userOpt = userRepository.findByEmail(email);
-            if (userOpt != null ) {
+            if (userOpt != null) {
                 userOpt.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(userOpt);
                 return true;
@@ -187,6 +188,19 @@ public class UserServiceImpl implements IUserService {
             return userRepository.findAll();
         } catch (Exception e) {
             throw new RuntimeException("Failed to get all users: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void changeRoleUserById(Long id, String role) {
+        try {
+            User user = userRepository.findById(id).orElse(null);
+            if (user != null) {
+                user.setRole(role);
+                userRepository.save(user);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to change user role by id: " + e.getMessage(), e);
         }
     }
 

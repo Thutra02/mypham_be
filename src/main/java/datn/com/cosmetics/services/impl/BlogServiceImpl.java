@@ -38,6 +38,7 @@ public class BlogServiceImpl implements IBlogService {
     @Override
     public Blog createBlog(BlogRequest request) {
         try {
+            System.out.println(request.getTags());
             Blog blog = new Blog();
             blog.setTitle(request.getTitle());
             blog.setContent(request.getContent());
@@ -48,8 +49,8 @@ public class BlogServiceImpl implements IBlogService {
             blog.setCategory(category);
             blog.setAuthor(userRepository.findByEmail(request.getAuthor()));
             Set<Tag> tags = new HashSet<>();
-            if (request.getTagNames() != null) {
-                for (String tagName : request.getTagNames()) {
+            if (request.getTags() != null) {
+                for (String tagName : request.getTags()) {
                     Tag tag = tagRepository.findByName(tagName);
                     if (tag == null) {
                         tag = new Tag();
@@ -66,6 +67,44 @@ public class BlogServiceImpl implements IBlogService {
             throw new RuntimeException("Error creating blog: " + e.getMessage());
         }
     }
+
+
+    @Override
+    public Blog updateBlog(Long id, BlogRequest request) {
+        try {
+            System.out.println(request.getTags());
+            Blog blog = blogRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Blog not found"));
+
+            blog.setTitle(request.getTitle());
+            blog.setContent(request.getContent());
+            blog.setImage(request.getImage());
+            blog.setStatus(request.getStatus());
+
+            BlogCategory category = blogCategoryRepository.findById(request.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Category not found"));
+            blog.setCategory(category);
+
+            Set<Tag> tags = new HashSet<>();
+            if (request.getTags() != null) {
+                for (String tagName : request.getTags()) {
+                    Tag tag = tagRepository.findByName(tagName);
+                    if (tag == null) {
+                        tag = new Tag();
+                        tag.setName(tagName);
+                        tag = tagRepository.save(tag);
+                    }
+                    tags.add(tag);
+                }
+            }
+            blog.setTags(tags);
+
+            return blogRepository.save(blog);
+        } catch (Exception e) {
+            throw new RuntimeException("Error updating blog: " + e.getMessage());
+        }
+    }
+
 
     @Override
     public Blog getBlogById(Long id) {
@@ -86,41 +125,6 @@ public class BlogServiceImpl implements IBlogService {
             return blogRepository.findAll(pageable);
         } catch (Exception e) {
             throw new RuntimeException("Error retrieving blogs: " + e.getMessage());
-        }
-    }
-
-    @Override
-    public Blog updateBlog(Long id, BlogRequest request) {
-        try {
-            Blog blog = blogRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Blog not found"));
-
-            blog.setTitle(request.getTitle());
-            blog.setContent(request.getContent());
-            blog.setImage(request.getImage());
-            blog.setStatus(request.getStatus());
-
-            BlogCategory category = blogCategoryRepository.findById(request.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Category not found"));
-            blog.setCategory(category);
-
-            Set<Tag> tags = new HashSet<>();
-            if (request.getTagNames() != null) {
-                for (String tagName : request.getTagNames()) {
-                    Tag tag = tagRepository.findByName(tagName);
-                    if (tag == null) {
-                        tag = new Tag();
-                        tag.setName(tagName);
-                        tag = tagRepository.save(tag);
-                    }
-                    tags.add(tag);
-                }
-            }
-            blog.setTags(tags);
-
-            return blogRepository.save(blog);
-        } catch (Exception e) {
-            throw new RuntimeException("Error updating blog: " + e.getMessage());
         }
     }
 

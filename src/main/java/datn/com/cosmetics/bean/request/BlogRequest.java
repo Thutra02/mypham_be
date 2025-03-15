@@ -27,5 +27,5 @@ public class BlogRequest {
 
      private String author;
 
-    private List<String> tagNames;
+    private List<String> tags;
 }

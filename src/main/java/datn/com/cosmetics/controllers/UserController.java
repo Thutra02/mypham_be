@@ -264,4 +264,18 @@ public class UserController {
             return ResponseEntity.badRequest().body(ApiResponse.error("Failed to block user by id: " + e.getMessage()));
         }
     }
+
+    // change role user by id
+    @Operation(summary = "Change role user by id", description = "Change role user by id")
+    @PutMapping("/role/{id}")
+    public ResponseEntity<ApiResponse<User>> changeRoleUserById(@PathVariable Long id, @RequestParam String role) {
+        try {
+            userService.changeRoleUserById(id, role);
+            return ResponseEntity.ok(ApiResponse.success(null, "Change role user by id successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(ApiResponse.error("Failed to change role user by id: " + e.getMessage()));
+        }
+    }
+
+
 }

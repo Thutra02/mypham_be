@@ -197,7 +197,7 @@ public class OrderServiceImpl implements IOrderService {
                 throw new IllegalArgumentException("Invalid status: " + status);
             }
             if (order.getStatus() == OrderStatus.CANCELLED) {
-                throw new IllegalArgumentException("Order has been cancelled");
+                throw new IllegalArgumentException("Đơn hàng đã được huỷ, không thể cập nhật trạng thái");
             }
             order.setStatus(OrderStatus.valueOf(status));
             return orderRepository.save(order);
@@ -220,7 +220,7 @@ public class OrderServiceImpl implements IOrderService {
                 throw new IllegalArgumentException("Invalid status: " + status);
             }
             if (order.getStatus() == OrderStatus.CANCELLED) {
-                throw new IllegalArgumentException("Order has been cancelled");
+                throw new IllegalArgumentException("Đơn hàng đã được huỷ, không thể cập nhật trạng thái");
             }
             order.setStatus(OrderStatus.valueOf(status));
             return orderRepository.save(order);

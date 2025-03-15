@@ -38,4 +38,6 @@ public interface IUserService {
     boolean deleteUserById(Long id);
 
     boolean blockUserById(Long id);
+
+    void changeRoleUserById(Long id,String role);
 }
